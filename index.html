@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Калькулятор Сну</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; text-align: center; padding: 30px; }
+        h1 { color: #333; }
+        input, button { padding: 10px; font-size: 16px; margin-top: 10px; }
+        #results { margin-top: 20px; font-size: 18px; }
+        p { margin: 6px 0; }
+    </style>
+</head>
+<body>
+    <h1>Калькулятор Сну</h1>
+    <input type="time" id="sleepTime" required>
+    <br>
+    <button onclick="calculateWakeTimes()">Розрахувати</button>
+    <div id="results"></div>
+
+    <script>
+        function calculateWakeTimes() {
+            const input = document.getElementById('sleepTime').value;
+            if (!input) {
+                alert('Введи час засинання!');
+                return;
+            }
+
+            const [hours, minutes] = input.split(':').map(Number);
+            let sleepDate = new Date();
+            sleepDate.setHours(hours, minutes + 15, 0); // 15 хв на засинання
+
+            const cycles = [1, 3, 5, 6];
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+
+            cycles.forEach(cycle => {
+                let wakeTime = new Date(sleepDate.getTime() + cycle * 90 * 60000);
+                let h = wakeTime.getHours().toString().padStart(2, '0');
+                let m = wakeTime.getMinutes().toString().padStart(2, '0');
+
+                let label = (cycle === 1) ? 'Погано' :
+                            (cycle === 3) ? 'Нейтрально' : 'Добре';
+
+                const text = `${cycle} цикл — ${h}:${m} (${label})`;
+                const p = document.createElement('p');
+                p.textContent = text;
+                results.appendChild(p);
+            });
+        }
+    </script>
+</body>
+</html>
